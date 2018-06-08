@@ -34,13 +34,43 @@ public class FacebookApiController {
 			this.objectMapper = objectMapper;
 			this.request = request;
 		}
-		   @RequestMapping(value = "/getPosts",
+/*		   @RequestMapping(value = "/getPosts",
 		            method = RequestMethod.POST)
 		    public ResponseEntity<ApiResponseMessage> getPosts(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body) {
 		       log.info("inside getPosts method");
 			   String accept = request.getHeader("Accept");
 		        ApiResponseMessage fbserviceResponse=fbservice.getPosts(appName, body);
 		        return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
-		    }
+		    }*/
 	    
+		@RequestMapping(value = "/perday",
+	            method = RequestMethod.POST)
+	    public ResponseEntity<ApiResponseMessage> getPerDayBasis(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body) {
+	       log.info("inside getPerDayBasis method");
+		   String accept = request.getHeader("Accept");
+		   if(!body.getPeriod().equalsIgnoreCase("day"))
+		   {
+			   ApiResponseMessage fbserviceResponse=new ApiResponseMessage(1, "period allowed :{day}", null);
+			   new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.BAD_REQUEST);
+		   }
+		   if(body.isInsights())
+		   {
+			   
+			   body.setMetric("["+body.getMetric()+"]"+"&period=day"); 
+			   log.info("metrics are: "+body.getMetric());
+			   ApiResponseMessage fbserviceResponse=fbservice.getPerDay(appName, body);
+			   return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
+		   }
+	        ApiResponseMessage fbserviceResponse=fbservice.getPerDay(appName, body);
+	        return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
+	    }
+		
+/*		@RequestMapping(value = "/perweek",
+	            method = RequestMethod.POST)
+	    public ResponseEntity<ApiResponseMessage> getPerWeekBasis(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body) {
+	       log.info("inside getPerDayBasis method");
+		   String accept = request.getHeader("Accept");
+	        ApiResponseMessage fbserviceResponse=fbservice.getPerWeek(appName, body);
+	        return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
+	    }*/
 }

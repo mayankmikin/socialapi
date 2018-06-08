@@ -11,5 +11,7 @@ public interface FacebookApiservice {
 
 ApiResponseMessage getPosts(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body);
 
+ApiResponseMessage getPerDay(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body);
 
+ApiResponseMessage getPerWeek(@RequestHeader(value="platform-name", required=true) String appName,@RequestBody ApiRequestMessage body);
 }
