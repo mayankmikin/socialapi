@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capitalone.socialApiFb.model.ApiPageRequest;
 import com.capitalone.socialApiFb.model.ApiRequestMessage;
 import com.capitalone.socialApiFb.model.ApiResponseMessage;
 import com.capitalone.socialApiFb.services.FacebookApiservice;
@@ -55,7 +56,6 @@ public class FacebookApiController {
 		   }
 		   if(body.isInsights())
 		   {
-			   
 			   body.setMetric("["+body.getMetric()+"]"+"&period=day"); 
 			   log.info("metrics are: "+body.getMetric());
 			   ApiResponseMessage fbserviceResponse=fbservice.getPerDay(appName, body);
@@ -73,4 +73,12 @@ public class FacebookApiController {
 	        ApiResponseMessage fbserviceResponse=fbservice.getPerWeek(appName, body);
 	        return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
 	    }*/
+		@RequestMapping(value = "/postimpressions",
+	            method = RequestMethod.POST)
+	    public ResponseEntity<ApiResponseMessage> savepostimpressions(@RequestBody ApiPageRequest req) {
+	       log.info("inside getPerDayBasis method");
+		   String accept = request.getHeader("Accept");
+	        ApiResponseMessage fbserviceResponse=fbservice.savepostimpressions(req);
+	        return new ResponseEntity<ApiResponseMessage>(fbserviceResponse,HttpStatus.OK);
+	    }
 }
