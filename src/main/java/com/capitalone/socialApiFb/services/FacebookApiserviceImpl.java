@@ -18,10 +18,12 @@ import org.springframework.web.client.RestTemplate;
 import com.capitalone.socialApiFb.model.ApiPageRequest;
 import com.capitalone.socialApiFb.model.ApiRequestMessage;
 import com.capitalone.socialApiFb.model.ApiResponseMessage;
+import com.capitalone.socialApiFb.model.Comments;
 import com.capitalone.socialApiFb.model.FBSaveJsonModel;
 import com.capitalone.socialApiFb.model.PagePostImpression;
 import com.capitalone.socialApiFb.model.PagePostImpressions;
 import com.capitalone.socialApiFb.model.Post;
+import com.capitalone.socialApiFb.model.PostAllData;
 import com.capitalone.socialApiFb.model.Posts;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -169,7 +171,9 @@ public ApiResponseMessage savepostimpressions(ApiPageRequest req) {
 	ObjectMapper mapper = new ObjectMapper();
 	Posts posts =mapper.convertValue(node, Posts.class);
 	log.info("post data is : "+posts.toString());
-	ArrayList<PagePostImpression> allimpressions=new ArrayList<>();
+/*	ArrayList<PagePostImpression> allimpressions=new ArrayList<>();*/
+	PostAllData alldata= new PostAllData();
+	
 	for(Post p: posts.getData())
 	{
 		url=env.getProperty("base.url")+p.getId()+"/insights?"
@@ -181,10 +185,20 @@ public ApiResponseMessage savepostimpressions(ApiPageRequest req) {
 				log.info("url is "+url);
 			node = restTemplate.getForObject(url, JsonNode.class);
 			PagePostImpressions impressions=mapper.convertValue(node, PagePostImpressions.class);
-			allimpressions.addAll(impressions.getData());
+			alldata.getAllimpressionsData().addAll(impressions.getData());
+			//allimpressions.addAll(impressions.getData());
+			// getting comments for each posts
+			log.info("getting commens data ");
+			url=env.getProperty("base.url")+p.getId()+"/comments?"
+					+env.getProperty("accesstoken")+req.getAccesstoken()
+					+env.getProperty("suffixparams");
+			log.info("url is "+url);
+			node = restTemplate.getForObject(url, JsonNode.class);
+			Comments comments=mapper.convertValue(node, Comments.class);
+			alldata.getAllcommentsData().addAll(comments.getData());
 	}
 	
-	log.info("impressions are: "+allimpressions);
+	log.info("impressions are: "+alldata);
 	
 		/*	try {
 	Path newFilePath = Paths.get("src/main/resources/postimpressions.json");
@@ -206,7 +220,7 @@ catch (IOException e) {
 	
     
     log.info("output is "+node.toString());
-    ApiResponseMessage resp= new ApiResponseMessage(4, "success", mapper.convertValue(allimpressions, JsonNode.class));
+    ApiResponseMessage resp= new ApiResponseMessage(4, "success", mapper.convertValue(alldata, JsonNode.class));
 log.info("inside getPerDay END");
 	return resp;
 }
