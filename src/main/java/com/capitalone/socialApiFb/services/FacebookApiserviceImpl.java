@@ -200,14 +200,23 @@ public ApiResponseMessage savepostimpressions(ApiPageRequest req) {
 	
 	log.info("impressions are: "+alldata);
 	
-		/*	try {
-	Path newFilePath = Paths.get("src/main/resources/postimpressions.json");
+			try {
+				log.info("saving data in a file: postimpressions_lifetime");
+				String filename="src/main/resources/postimpressions_lifetime_"+pageId+".json";
+	Path newFilePath = Paths.get(filename);
+	File file = new File(filename);
+	if (file.exists() && file.isFile())
+	  {
+		log.info("filealready exists by name "+filename);
+		log.info("deleteing file");
+	  file.delete();
+	  }
 	Files.createFile(newFilePath);
 	//Object to JSON in file
 	//ClassLoader classLoader = getClass().getClassLoader();
-	File file = new File("src/main/resources/postimpressions.json");
+	
 	//JsonNode savenode=mapper.convertValue(, JsonNode.class);
-		//mapper.writerWithDefaultPrettyPrinter().writeValue(file,node);
+		mapper.writerWithDefaultPrettyPrinter().writeValue(file,alldata);
 	} catch (JsonProcessingException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -216,7 +225,7 @@ public ApiResponseMessage savepostimpressions(ApiPageRequest req) {
 catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-	}*/
+	}
 	
     
     log.info("output is "+node.toString());
