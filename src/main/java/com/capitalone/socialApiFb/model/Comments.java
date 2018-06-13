@@ -7,33 +7,28 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class Comments 
 {
 	ArrayList<Comment>data;
-	private JsonNode paging;
+	private JsonNode summary;
+	
 	public ArrayList<Comment> getData() {
 		return data;
 	}
 	public void setData(ArrayList<Comment> data) {
 		this.data = data;
 	}
-	public JsonNode getPaging() {
-		return paging;
+	public JsonNode getSummary() {
+		return summary;
 	}
-	public void setPaging(JsonNode paging) {
-		this.paging = paging;
+	public void setSummary(JsonNode summary) {
+		this.summary = summary;
 	}
-	@Override
-	public String toString() {
-		return "Comments [data=" + data + ", paging=" + paging + "]";
+	public Comments(ArrayList<Comment> data, JsonNode summary) {
+		super();
+		this.data = data;
+		this.summary = summary;
 	}
 	public Comments() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Comments(ArrayList<Comment> data, JsonNode paging) {
-		super();
-		this.data = data;
-		this.paging = paging;
-	}
-	
-	
 	
 }

@@ -25,10 +25,12 @@ import com.capitalone.socialApiFb.model.PagePostImpressions;
 import com.capitalone.socialApiFb.model.Post;
 import com.capitalone.socialApiFb.model.PostAllData;
 import com.capitalone.socialApiFb.model.Posts;
+import com.capitalone.socialApiFb.model.SharedPosts;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 @Service("fbservice")
 public class FacebookApiserviceImpl implements FacebookApiservice {
 	private static final Logger log = LoggerFactory.getLogger(FacebookApiserviceImpl.class);
@@ -191,11 +193,26 @@ public ApiResponseMessage savepostimpressions(ApiPageRequest req) {
 			log.info("getting commens data ");
 			url=env.getProperty("base.url")+p.getId()+"/comments?"
 					+env.getProperty("accesstoken")+req.getAccesstoken()
-					+env.getProperty("suffixparams");
-			log.info("url is "+url);
+					+env.getProperty("suffixparams")+"&summary=1";
+			log.info("url for comment api is "+url);
 			node = restTemplate.getForObject(url, JsonNode.class);
 			Comments comments=mapper.convertValue(node, Comments.class);
-			alldata.getAllcommentsData().addAll(comments.getData());
+			alldata.getAllcommentsData().add(comments);
+			log.info("comment data is :"+comments);
+			// getting shared posts data 
+			url=env.getProperty("base.url")+p.getId()+"/sharedposts?"
+					+env.getProperty("accesstoken")+req.getAccesstoken()
+					+env.getProperty("suffixparams")+"&summary=1";
+			log.info("url for comment api is "+url);
+			node = restTemplate.getForObject(url, JsonNode.class);
+			SharedPosts sharedposts=mapper.convertValue(node, SharedPosts.class);
+			if(!sharedposts.getData().isEmpty())
+			{
+				log.info("sharedposts data is :"+sharedposts);
+				alldata.getAllsharedpostsData().add(sharedposts);
+			}
+
+			
 	}
 	
 	log.info("impressions are: "+alldata);
