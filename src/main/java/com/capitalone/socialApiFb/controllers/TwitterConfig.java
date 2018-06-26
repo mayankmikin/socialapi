@@ -29,7 +29,7 @@ public class TwitterConfig
 			  .setOAuthConsumerKey(env.getProperty("twitter.oauth.consumerKey"))
 			  .setOAuthConsumerSecret(env.getProperty("twitter.oauth.consumerSecret"))
 			  .setOAuthAccessToken(env.getProperty("twitter.oauth.accessToken"))
-			  .setOAuthAccessTokenSecret(env.getProperty("twitter.oauth.accessToken"));
+			  .setOAuthAccessTokenSecret(env.getProperty("twitter.oauth.accessTokenSecret"));
 			TwitterFactory tf = new TwitterFactory(cb.build());
 			 this.conf=tf.getInstance();
 	  }
